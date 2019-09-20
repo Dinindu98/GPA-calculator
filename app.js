@@ -1,3 +1,4 @@
+
 const form = document.querySelector('#task-form');
 const taskList = document.getElementById('transection-table');
 const  clearBtn = document.querySelector('.clear-tasks');
@@ -6,8 +7,14 @@ const filter = document.querySelector('#filter');
 const subject = document.querySelector('#subject');
 const result = document.querySelector('#result');
 const credit = document.querySelector('#credit');
+var element = document.querySelectorAll('select');
 
-const resultSheet = document.getElementById('transection-table');
+document.addEventListener('DOMContentLoaded',function(){
+    
+    var instance = M.FormSelect.init(element,Option);
+ });
+
+const resultSheet = document.getElementById('result-sheet');
 let num =0;
 
 loadEventListners();
@@ -16,15 +23,29 @@ function loadEventListners(){
 
    // document.addEventListener('DOMContentLoaded',getTasks);
     form.addEventListener('submit',addTask);
-    taskList.addEventListener('click',removeTask);
+   // taskList.addEventListener('click',removeTask);
    // clearBtn.addEventListener('click',clearTasks);
 //filter.addEventListener('keyup',filterTask);
 }
 
 function addTask(e){
-    if(assets.value === '' && equity.value ==='' && income.value === '' && liabilities.value === ''){
-        alert('Add a trasnsction');
-    }else{
+
+    var elements = document.querySelectorAll('#result');
+    var instances = M.FormSelect.getInstance(element);
+    var b = instances.getSelectedValues();
+    console.log(b);
+
+    if(subject.value ===''){
+        alert('Add a subjectname');
+    }
+    else if(result.value === ''){
+        //alert('Select your result');
+    }
+    else if(credit.value === ''){
+        //alert('Select your credit');
+    }
+    
+    else{
         num++;
         const row = document.createElement('tr');
         row.innerHTML = `<td id="col0">${num}</td>
