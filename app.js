@@ -1,6 +1,5 @@
 
 const form = document.querySelector('#task-form');
-const taskList = document.getElementById('transection-table');
 const  clearBtn = document.querySelector('.clear-tasks');
 const filter = document.querySelector('#filter');
 
@@ -9,13 +8,18 @@ const result = document.querySelector('#result');
 const credit = document.querySelector('#credit');
 var element = document.querySelectorAll('select');
 
+
+
+
 document.addEventListener('DOMContentLoaded',function(){
     
     var instance = M.FormSelect.init(element,Option);
  });
 
 const resultSheet = document.getElementById('result-sheet');
+
 let num =0;
+let gpa = 0.000 
 
 loadEventListners();
 
@@ -23,66 +27,43 @@ function loadEventListners(){
 
    // document.addEventListener('DOMContentLoaded',getTasks);
     form.addEventListener('submit',addTask);
-   // taskList.addEventListener('click',removeTask);
+    resultSheet.addEventListener('click',removeTask);
    // clearBtn.addEventListener('click',clearTasks);
 //filter.addEventListener('keyup',filterTask);
 }
 
 function addTask(e){
 
-    var elements = document.querySelectorAll('#result');
-    var instances = M.FormSelect.getInstance(element);
-    var b = instances.getSelectedValues();
-    console.log(b);
+    
+    var resultValue = result.options[result.selectedIndex].value;
+    var creditValue = credit.options[credit.selectedIndex].value;
+    var resultMark = result.options[result.selectedIndex].innerText;
+    console.log(resultValue);
 
     if(subject.value ===''){
         alert('Add a subjectname');
     }
-    else if(result.value === ''){
-        //alert('Select your result');
+    else if(resultValue === '0'){
+        alert('Select your result');
     }
-    else if(credit.value === ''){
-        //alert('Select your credit');
+    else if(creditValue === '0'){
+        alert('Select your credit');
     }
     
     else{
         num++;
         const row = document.createElement('tr');
         row.innerHTML = `<td id="col0">${num}</td>
-                        <td id="col1">${assets.value}</td>
-                        <td id="col1">${equity.value}</td>
-                        <td id="col1">${income.value}</td>
-                        <td id="col1">${liabilities.value}</td>
-                        <td id="col1"><a class="delete-item secondary-content"><i class="fa fa-remove"></i></a></td>`;
-        transectionTable.appendChild(row);
-        const assetsArray = assets.value.split("-");
-        const equityArray = equity.value.split("-");
-        const incomeArray = income.value.split("-");
-        const liabilityArray = liabilities.value.split("-");
-
-        if(assetsArray.length >1 && assetsArray[0] !== ""){
-            assets.value = parseFloat(assetsArray[0]) - parseFloat(assetsArray[1]);
-        }
-        if(equityArray.length >1 && equityArray[0] !==""){
-            equity.value = parseFloat(equityArray[0]) - parseFloat(equityArray[1]);
-        }
-        if(incomeArray.length >1 && incomeArray[0] !==""){
-            income.value = parseFloat(incomeArray[0]) - parseFloat(incomeArray[1]);
-        }
-        if(liabilityArray.length >1 && liabilityArray[0] !==""){
-            liabilities.value = parseFloat(liabilityArray[0]) - parseFloat(liabilityArray[1]);
-        }
-
+                        <td id="col1">${subject.value}</td>
+                        <td id="col2">${creditValue}</td>
+                        <td id="col3" title="${resultValue}">${resultMark}</td>
+                        <td id="col4"><a class="delete-item secondary-content"><i class="fa fa-remove"></i></a></td>`;
+        resultSheet.appendChild(row);
         
-        equity.value = parseFloat(equityArray[0] - parseFloat(equityArray[1]));
+        gpaCalculate(e);
 
-        console.log(assets.value);
-        console.log(assetsArray[1]);
-        
-        assets.value = '';
-        equity.value = '';
-        income.value  = '';
-        liabilities.value = '';
+        subject.value = '';
+        document.getElementById('credit').seletedIndex = 'Credit';
         
     }
     e.preventDefault();
@@ -108,6 +89,7 @@ function removeTask(e){
         if(confirm('Are you sure?')){
             e.target.parentElement.parentElement.parentElement.remove();
             // removeTaskFromLocalStorage(e.target.parentElement.parentElement);
+            gpaCalculate(e);
         }
         
     }
@@ -183,3 +165,28 @@ function removeTask(e){
 //     tasks.push(task);
 //     localStorage.setItem('tasks',JSON.stringify(tasks));
 // }
+
+function gpaCalculate(e){
+    const getGpa = document.getElementById('gpa');
+    var col2C = document.querySelectorAll('#col2');
+    var col3R = document.querySelectorAll('#col3');
+    if(col2C.length === 0){
+        getGpa.innerText = `GPA 0.000`; 
+    }else{
+    
+        gpa = 0;
+        var total = 0;
+        var totalCredit = 0;
+    
+    for(let count = 0; col2C.length>count; count++){
+        total += Number(col2C[count].innerText) * Number(col3R[count].title);
+        totalCredit += Number(col2C[count].innerText);
+    }
+    let unfixedGpa = total/totalCredit;
+    gpa = unfixedGpa.toFixed(3);
+    console.log(gpa);
+    getGpa.innerText = `GPA ${gpa}`; 
+    }
+    
+    
+}
